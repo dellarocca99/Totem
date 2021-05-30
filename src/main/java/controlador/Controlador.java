@@ -1,8 +1,7 @@
 package controlador;
 
-import comunicacion.Emisor;
-import comunicacion.Receptor;
-import modeloPaqueteInfo.FactoryPaqueteNuevoCliente;
+import comunicacion.ControllerServer;
+import modeloInfo.FactoryInfoCliente;
 import vista.IVista;
 import vista.VentanaTotem;
 
@@ -13,14 +12,14 @@ import java.util.Observer;
 
 public class Controlador implements ActionListener, Observer {
     private IVista vista;
-    private Receptor receptor;
+    private ControllerServer controllerServer;
 
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("Aceptar")){
             String dni= vista.getTextFieldDNI().getText();
             if (dni.length()>=7){
                 vista.getAceptarButton().setEnabled(false);
-                Emisor.getInstance().enviarPaquete(FactoryPaqueteNuevoCliente.getPaqueteNuevoCliente(Integer.parseInt(dni)));
+                controllerServer.enviarPaquete(FactoryInfoCliente.getPaqueteNuevoCliente(Integer.parseInt(dni)));
                 vista.getTextFieldDNI().setText("");
                 vista.getAceptarButton().setEnabled(true);
             }
@@ -28,17 +27,34 @@ public class Controlador implements ActionListener, Observer {
     }
 
     public Controlador(){
-        receptor=Receptor.getInstance();
-        receptor.addObserver(this);
+        controllerServer =new ControllerServer();
+        controllerServer.addObserver(this);
         this.vista=new VentanaTotem(this);
-        receptor.run();
+        Thread t=new Thread(controllerServer);
+        t.start();
     }
 
     @Override
     public void update(Observable o, Object arg) {
-        int horas= ((Receptor) o).getTiempoAtencion().getHoras();
-        int minutos= ((Receptor) o).getTiempoAtencion().getMinutos();
-        int segundos= ((Receptor) o).getTiempoAtencion().getSegundos();
-        vista.getTiempo().setText(horas+" horas, "+minutos+" minutos, "+segundos+" segundos");
+        int horas= ((ControllerServer) o).getTiempoAtencion().getHoras();
+        int minutos= ((ControllerServer) o).getTiempoAtencion().getMinutos();
+        int segundos= ((ControllerServer) o).getTiempoAtencion().getSegundos();
+        if (horas!=0)
+            if (horas==1)
+                vista.getTiempo().setText(horas+" hora, "+minutos+" minutos, "+segundos+" segundos");
+            else
+                vista.getTiempo().setText(horas+" horas, "+minutos+" minutos, "+segundos+" segundos");
+        else
+            if (minutos!=0)
+                if (minutos==1)
+                    vista.getTiempo().setText(minutos+" minuto, "+segundos+" segundos");
+                else
+                    vista.getTiempo().setText(minutos+" minutos, "+segundos+" segundos");
+            else
+                if (segundos==1)
+                    vista.getTiempo().setText(segundos+" segundo");
+                else
+                    vista.getTiempo().setText(segundos+" segundos");
+
     }
 }

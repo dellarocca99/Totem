@@ -1,12 +1,11 @@
-package modeloPaqueteInfo;
-
-import java.io.Serializable;
+package modeloInfo;
 
 import modeloUtil.TiempoAtencion;
 
-public class PaqueteTiempoAtencion implements IPaquete,Serializable{
+public class InfoTiempoAtencion implements Informable {
     private final int idOperacion = 2;
     private TiempoAtencion tiempoAtencion;
+    private int box;
 
     public void setTiempoAtencion(TiempoAtencion tiempoAtencion) {
         this.tiempoAtencion = tiempoAtencion;
@@ -20,4 +19,13 @@ public class PaqueteTiempoAtencion implements IPaquete,Serializable{
     public int getIdOperacion() {
         return idOperacion;
     }
+
+    public int getBox() {
+        return this.box;
+    }
+
+    public void setBox(int box) {
+        this.box = box;
+    }
 }
+

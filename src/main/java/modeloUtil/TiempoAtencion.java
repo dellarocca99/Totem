@@ -22,4 +22,9 @@ public class TiempoAtencion implements Serializable{
     public int getSegundos() {
         return segundos;
     }
+
+    @Override
+    public String toString() {
+        return this.horas+":"+this.minutos+":"+this.segundos;
+    }
 }

@@ -136,7 +136,7 @@
                 <properties>
                   <enabled value="true"/>
                   <font size="22" style="0"/>
-                  <text value="Tiempo de espera promedio:"/>
+                  <text value="Tiempo de atención promedio:"/>
                 </properties>
               </component>
             </children>
@@ -155,7 +155,7 @@
                 </constraints>
                 <properties>
                   <font size="22"/>
-                  <text value="00 horas, 00 minutos, 00 segundos"/>
+                  <text value="-"/>
                 </properties>
               </component>
             </children>
