@@ -26,12 +26,13 @@ public class ControllerServer extends Observable implements Runnable{
                     ObjectInputStream ois=new ObjectInputStream(socket.getInputStream());
                     Informable paquete = (Informable) ois.readObject();
                     InfoTiempoAtencion paqueteTiempoAtencion= (InfoTiempoAtencion) paquete;
+                    System.out.println("puerto:"+this.puerto);
                     tiempoAtencion=paqueteTiempoAtencion.getTiempoAtencion();
                     setChanged();
                     notifyObservers();
                     this.socket.close();
                     Thread.sleep(2000);
-                } catch (IOException e){ // si se cae el server, consulto al DNS para que me de un nuevo puerto
+                } catch (IOException e){// si se cae el server, consulto al DNS para que me de un nuevo puerto
                     this.consultaDNS();
                 }
             }
@@ -47,7 +48,7 @@ public class ControllerServer extends Observable implements Runnable{
             ObjectOutputStream oos2= new ObjectOutputStream(socket.getOutputStream());
             oos2.writeObject(paquete);
         } catch (IOException e) {
-            e.printStackTrace();
+
         }
     }
 
@@ -57,7 +58,7 @@ public class ControllerServer extends Observable implements Runnable{
 
     public void consultaDNS(){
         try {
-            this.socket=new Socket("localhost",9999);
+            this.socket=new Socket("localhost",9180);
             ObjectOutputStream oos=new ObjectOutputStream(socket.getOutputStream());
             oos.writeObject(new InfoServerTotem());
             ObjectInputStream ois=new ObjectInputStream(socket.getInputStream());
