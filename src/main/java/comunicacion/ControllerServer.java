@@ -1,9 +1,6 @@
 package comunicacion;
 
-import modeloInfo.InfoPeticion;
-import modeloInfo.InfoServerFuncional;
-import modeloInfo.Informable;
-import modeloInfo.InfoTiempoAtencion;
+import modeloInfo.*;
 import modeloUtil.TiempoAtencion;
 
 import java.io.IOException;
@@ -34,11 +31,11 @@ public class ControllerServer extends Observable implements Runnable{
                     notifyObservers();
                     this.socket.close();
                     Thread.sleep(2000);
-                } catch (ConnectException e){ // si se cae el server, consulto al DNS para que me de un nuevo puerto
-                    consultaDNS();
+                } catch (IOException e){ // si se cae el server, consulto al DNS para que me de un nuevo puerto
+                    this.consultaDNS();
                 }
             }
-        } catch (IOException | ClassNotFoundException | InterruptedException e) {
+        } catch (ClassNotFoundException | InterruptedException e) {
             e.printStackTrace();
         }
 
@@ -62,7 +59,7 @@ public class ControllerServer extends Observable implements Runnable{
         try {
             this.socket=new Socket("localhost",9999);
             ObjectOutputStream oos=new ObjectOutputStream(socket.getOutputStream());
-            oos.writeObject(new Object());
+            oos.writeObject(new InfoServerTotem());
             ObjectInputStream ois=new ObjectInputStream(socket.getInputStream());
             InfoServerFuncional info=(InfoServerFuncional)ois.readObject();
             puerto=info.getPuertoServer();
